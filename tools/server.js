@@ -3,7 +3,7 @@ import WebpackDevServer from 'webpack-dev-server';
 import config from '../webpack.config.dev';
 import startMessage from './server_start_message';
 
-const port = 3000;
+const port = 8000;
 
 new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,

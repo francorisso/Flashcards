@@ -39,19 +39,50 @@ export function switchItemState(itemId) {
 }
 
 export function load() {
-  const words = [
+  let words = [
     {
-      id: 1,
-      name: 'der Drucker (-)',
-      image: 'http://st2.depositphotos.com/1010652/5980/v/450/depositphotos_59806657-Cartoon-printer-cartoon.jpg',
-      mode: MODE_HIDDEN,
+      name: 'der Teppich (-)',
+      image: 'deutsch_tepich',
     },
     {
-      id: 2,
-      name: 'das Bild (er)',
-      image: 'http://www.cuadrostock.com/media/fotos2/pro_63122_1.jpg',
-      mode: MODE_HIDDEN,
-    }];
+      name: 'der Tisch (er)',
+      image: 'tisch_fzug1b',
+    },
+    {
+      name: 'der Stuhl (e)',
+      image: 'stuhl_wyi23q',
+    },
+    {
+      name: 'das Sofa (e)',
+      image: 'sofa_d00ql0',
+    },
+    {
+      name: 'der Sessel (e)',
+      image: 'sessel_c93fa8',
+    },
+    {
+      name: 'der Schrank (e)',
+      image: 'schrank_yet3s4',
+    },
+    {
+      name: 'die Lampe (e)',
+      image: 'lampe_t2awiz',
+    },
+    {
+      name: 'das Bild (e)',
+      image: 'bild_w2kl5z',
+    },
+    {
+      name: 'das Bett (e)',
+      image: 'bett_d4nbxb',
+    },
+  ];
+  words = words.map((word, idx) => ({
+    ...word,
+    id: idx,
+    image: `http://res.cloudinary.com/inloove/image/upload/w_300,h_300,c_fit/${word.image}.jpg`,
+    mode: MODE_HIDDEN,
+  }));
   return {
     type: LOAD,
     words,

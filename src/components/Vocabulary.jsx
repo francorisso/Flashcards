@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Flashcard from './Flashcard';
 import * as vocabularyActions from '../ducks/vocabulary';
+import classNames from './Vocabulary.scss';
 
 class Vocabulary extends Component {
   componentDidMount() {
@@ -10,7 +11,7 @@ class Vocabulary extends Component {
 
   render() {
     const { words, switchItemState } = this.props;
-    return (<div className="row">
+    return (<div className={classNames.container}>
       {words && words.toArray().map(card => (
         <Flashcard
           key={card.id}

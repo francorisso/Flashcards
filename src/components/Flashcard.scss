@@ -1,11 +1,39 @@
+@import '../sass/default';
+
+.container {
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+
+  @include mobile {
+    width: 95%;
+  }
+}
+
+.img_container {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  height: 300px;
+
+  img {
+    max-width: 100%;
+  }
+}
+
 .die {
-  color: #f00;
+  color: #D40D12;
 }
 
 .der {
-  color: #0ff;
+  color: #001EBA;
 }
 
 .das {
-  color: #0f0;
+  color: #168039;
+}
+
+.touch {
+  color: #ccc;
+  text-align: center;
 }
