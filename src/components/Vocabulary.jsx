@@ -16,7 +16,6 @@ class Vocabulary extends Component {
         <Flashcard
           key={card.id}
           onClick={() => {
-            console.log('hola');
             switchItemState(card.id);
           }}
           {...card}

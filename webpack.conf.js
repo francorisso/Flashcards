@@ -3,12 +3,7 @@ const Path = require('path');
 const Webpack = require('webpack');
 
 module.exports = {
-  entry: [
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
-    './src/index',
-  ],
-  target: 'web',
+  entry: './src/index',
   output: {
     path: Path.resolve(__dirname, 'build'),
     publicPath: '/build/',

@@ -1,9 +1,10 @@
 {
-  "name": "package-name",
+  "name": "deutsch-lernen",
   "version": "1.0.0",
   "description": "",
   "main": "bundle.js",
   "scripts": {
+    "build": "webpack --config webpack.conf.js -p",
     "create:folders": "cd src/;mkdir components;mkdir ducks;echo 'Folders Created.'",
     "open:src": "babel-node ./tools/server.js",
     "start": "npm run open:src",
