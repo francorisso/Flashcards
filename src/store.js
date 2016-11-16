@@ -5,7 +5,11 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 import reducers from './reducers';
 
-const devToolsExtension = window.devToolsExtension && window.devToolsExtension();
+const devToolsExtension = window && window.devToolsExtension && window.devToolsExtension();
+const enhancers = [
+  applyMiddleware(thunk),
+  devToolsExtension,
+].filter(func => !!func);
 
 const store = createStore(
   combineReducers({
@@ -14,7 +18,7 @@ const store = createStore(
     routing: routerReducer,
   }),
   {},
-  compose(applyMiddleware(thunk), devToolsExtension)
+  compose(...enhancers)
 );
 
 export default store;
