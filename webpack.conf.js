@@ -14,7 +14,7 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loaders: ['react-hot', 'babel'],
+        loaders: ['babel'],
       },
       {
         test: /\.scss$/,
@@ -35,7 +35,6 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('bundle.css', { allChunks: true }),
-    new Webpack.HotModuleReplacementPlugin(),
   ],
   resolve: {
     extensions: ['', '.js', '.jsx'],
