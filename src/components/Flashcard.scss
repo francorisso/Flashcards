@@ -18,8 +18,11 @@
   height: 300px;
   width: 300px;
 
+  @include mobile {
+    width: 100%;
+  }
+
   img {
-    width: auto;
     max-width: 100%;
   }
 }
