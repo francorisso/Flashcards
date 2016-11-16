@@ -41,43 +41,43 @@ export function switchItemState(itemId) {
 export function load() {
   let words = [
     {
-      name: 'der Teppich (-)',
+      name: 'der Teppich (e)',
       image: 'deutsch_tepich',
     },
     {
-      name: 'der Tisch (er)',
+      name: 'der Tisch (e)',
       image: 'tisch_fzug1b',
     },
     {
-      name: 'der Stuhl (e)',
+      name: 'der Stuhl (-¨e)',
       image: 'stuhl_wyi23q',
     },
     {
-      name: 'das Sofa (e)',
+      name: 'das Sofa (s)',
       image: 'sofa_d00ql0',
     },
     {
-      name: 'der Sessel (e)',
+      name: 'der Sessel (-)',
       image: 'sessel_c93fa8',
     },
     {
-      name: 'der Schrank (e)',
+      name: 'der Schrank (-¨e)',
       image: 'schrank_yet3s4',
     },
     {
-      name: 'die Lampe (e)',
+      name: 'die Lampe (n)',
       image: 'lampe_t2awiz',
     },
     {
-      name: 'das Bild (e)',
+      name: 'das Bild (er)',
       image: 'bild_w2kl5z',
     },
     {
-      name: 'das Bett (e)',
+      name: 'das Bett (en)',
       image: 'bett_d4nbxb',
     },
     {
-      name: 'die Kette (e)',
+      name: 'die Kette (n)',
       image: 'kette_izh1e6',
     },
     {
@@ -89,15 +89,15 @@ export function load() {
       image: 'feuerzeug_jtq4ur',
     },
     {
-      name: 'die Flasche (e)',
+      name: 'die Flasche (n)',
       image: 'flasche_aj6qpn',
     },
     {
-      name: 'das Buch (e)',
+      name: 'das Buch (-¨er)',
       image: 'buch_jthuv2',
     },
     {
-      name: 'die Brille (e)',
+      name: 'die Brille (n)',
       image: 'brille_so8qin',
     },
     {
@@ -105,15 +105,15 @@ export function load() {
       image: 'bleistift_glbme2',
     },
     {
-      name: 'der Schlüssel (e)',
+      name: 'der Schlüssel (-)',
       image: 'schlusel_uubyqi',
     },
     {
-      name: 'der Kugelschreiber (e)',
+      name: 'der Kugelschreiber (-)',
       image: 'kugelschreiber_hpmrn3',
     },
     {
-      name: 'das Uhr (e)',
+      name: 'das Uhr (en)',
       image: 'uhr_mkxnjp',
     },
     {
@@ -121,32 +121,28 @@ export function load() {
       image: 'schirm_kamqsv',
     },
     {
-      name: 'die Tasche (e)',
+      name: 'die Tasche (n)',
       image: 'tasche_utb0tv',
     },
     {
-      name: 'der Streichholz (e)',
+      name: 'der Streichholz (-¨er)',
       image: 'streichholz_bvg7y7',
     },
     {
-      name: 'die Seife (e)',
+      name: 'die Seife (n)',
       image: 'steife_wfub1c',
-    },
-    {
-      name: 'die Geldbörse (e)',
-      image: 'geldborse_jg5zyl',
     },
 
     {
-      name: 'der Schinken (e)',
+      name: 'der Schinken (-)',
       image: 'schinken_bdavta',
     },
     {
-      name: 'der Apfel (e)',
+      name: 'der Apfel (-¨)',
       image: 'apfel_paruch',
     },
     {
-      name: 'die Butter (e)',
+      name: 'die Butter',
       image: 'butter_pf8xac',
     },
     {
@@ -154,23 +150,23 @@ export function load() {
       image: 'fisch_ksyagp',
     },
     {
-      name: 'der Kuchen (e)',
+      name: 'der Kuchen (-)',
       image: 'kuchen_p55nbx',
     },
     {
-      name: 'die Kartoffel (e)',
+      name: 'die Kartoffel (n)',
       image: 'kartoffel_iqjgit',
     },
     {
-      name: 'der Braten (e)',
+      name: 'der Braten (-)',
       image: 'braten_ltg5v0',
     },
     {
-      name: 'der Käse (e)',
+      name: 'der Käse (-)',
       image: 'kese_eamkjt',
     },
     {
-      name: 'die Orange (e)',
+      name: 'die Orange (n)',
       image: 'orange_ukzpn7',
     },
     {
@@ -178,23 +174,23 @@ export function load() {
       image: 'salat_dq5s8j',
     },
     {
-      name: 'die Suppe (e)',
+      name: 'die Suppe (n)',
       image: 'suppe_im0yqo',
     },
     {
-      name: 'die Milch (e)',
+      name: 'die Milch',
       image: 'milch_sc3avc',
     },
     {
-      name: 'die Schokolade (e)',
+      name: 'die Schokolade (n)',
       image: 'schokolade_frb5f3',
     },
     {
-      name: 'der Tee (e)',
+      name: 'der Tee (s)',
       image: 'tee_sm7gcp',
     },
     {
-      name: 'die Tomate (e)',
+      name: 'die Tomate (n)',
       image: 'tomate_b1xxre',
     },
     {
@@ -203,11 +199,11 @@ export function load() {
     },
 
     {
-      name: 'der Computer (e)',
+      name: 'der Computer (-)',
       image: 'computer_enot6c',
     },
     {
-      name: 'die SMS (e)',
+      name: 'die SMS (-)',
       image: 'sms_ndoxxq',
     },
     {
@@ -215,15 +211,15 @@ export function load() {
       image: 'telefon_dkp5uw',
     },
     {
-      name: 'der Drucker (e)',
+      name: 'der Drucker (-)',
       image: 'drucker_olfuue',
     },
     {
-      name: 'das Handy (e)',
+      name: 'das Handy (s)',
       image: 'handy_xdennl',
     },
     {
-      name: 'der Kalender (e)',
+      name: 'der Kalender (-)',
       image: 'kalender_w33ycj',
     },
     {
@@ -231,15 +227,15 @@ export function load() {
       image: 'formulare_qafhtw',
     },
     {
-      name: 'der Laptop (e)',
+      name: 'der Laptop (s)',
       image: 'laptop_ldzegi',
     },
     {
-      name: 'die E-mail (e)',
+      name: 'die E-mail (s)',
       image: 'e-mail_pjxfzf',
     },
     {
-      name: 'das Notizbuch (e)',
+      name: 'das Notizbuch (-¨er)',
       image: 'notizbuch_ooc6hq',
     },
     {
@@ -247,15 +243,15 @@ export function load() {
       image: 'bildschirm_zamddx',
     },
     {
-      name: 'die Maus (e)',
+      name: 'die Maus (-¨e)',
       image: 'maus_fbcpeq',
     },
     {
-      name: 'die Briefmarke (e)',
+      name: 'die Briefmarke (n)',
       image: 'briefmarke_xvaqeh',
     },
     {
-      name: 'die Rechnung (e)',
+      name: 'die Rechnung (en)',
       image: 'rechnung_bsyqtw',
     },
     {
