@@ -1,0 +1,39 @@
+.container {
+  display: block;
+  padding: 10px;
+}
+
+.filters {
+
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  margin: 0 0 10px 0;
+
+  label {
+    padding-right: 10px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 46px;
+  }
+}
+
+.male {
+  color: blue;
+}
+
+.female {
+  color: red;
+}
+
+.neutral {
+  color: green;
+}
+
+.menuItem {
+  a {
+    font-size: 18px;
+  }
+}

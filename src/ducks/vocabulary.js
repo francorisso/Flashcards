@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import { words } from '../data/vocabulary';
 
 const NAMESPACE = 'deutsch-flashcards/vocabulary';
 
@@ -8,13 +9,22 @@ export const MODE_SHOWN = `${NAMESPACE}/mode_shown`;
 export const LOAD = `${NAMESPACE}/load`;
 export const SWITCH_MODE = `${NAMESPACE}/switch_mode`;
 
+export const FILTER = `${NAMESPACE}/filter`;
+
 const initState = Immutable.Map({
   words: Immutable.List([]),
+  filters: Immutable.Map({}),
 });
 export default function reducer(state = initState, action) {
   switch (action.type) {
     case LOAD:
       return state.set('words', Immutable.List(action.words));
+    case FILTER: {
+      // TODO FIX BRUTEFORCE
+      const filters = state.get('filters');
+      return state
+        .set('filters', filters.set(action.label, action.value));
+    }
     case SWITCH_MODE: {
       // TODO FIX BRUTEFORCE
       const { itemId } = action;
@@ -38,235 +48,49 @@ export function switchItemState(itemId) {
   };
 }
 
+export const GENRE_MALE = 'male';
+export const GENRE_FEMALE = 'female';
+export const GENRE_NEUTRAL = 'neutral';
+const artikelToGenre = {
+  die: GENRE_FEMALE,
+  der: GENRE_MALE,
+  das: GENRE_NEUTRAL,
+};
 export function load() {
-  let words = [
-    {
-      name: 'der Teppich (e)',
-      image: 'deutsch_tepich',
-    },
-    {
-      name: 'der Tisch (e)',
-      image: 'tisch_fzug1b',
-    },
-    {
-      name: 'der Stuhl (-¨e)',
-      image: 'stuhl_wyi23q',
-    },
-    {
-      name: 'das Sofa (s)',
-      image: 'sofa_d00ql0',
-    },
-    {
-      name: 'der Sessel (-)',
-      image: 'sessel_c93fa8',
-    },
-    {
-      name: 'der Schrank (-¨e)',
-      image: 'schrank_yet3s4',
-    },
-    {
-      name: 'die Lampe (n)',
-      image: 'lampe_t2awiz',
-    },
-    {
-      name: 'das Bild (er)',
-      image: 'bild_w2kl5z',
-    },
-    {
-      name: 'das Bett (en)',
-      image: 'bett_d4nbxb',
-    },
-    {
-      name: 'die Kette (n)',
-      image: 'kette_izh1e6',
-    },
-    {
-      name: 'der Fotoapparat (e)',
-      image: 'fotoapparat_eqk6xg',
-    },
-    {
-      name: 'das Feuerzeug (e)',
-      image: 'feuerzeug_jtq4ur',
-    },
-    {
-      name: 'die Flasche (n)',
-      image: 'flasche_aj6qpn',
-    },
-    {
-      name: 'das Buch (-¨er)',
-      image: 'buch_jthuv2',
-    },
-    {
-      name: 'die Brille (n)',
-      image: 'brille_so8qin',
-    },
-    {
-      name: 'der Bleistift (e)',
-      image: 'bleistift_glbme2',
-    },
-    {
-      name: 'der Schlüssel (-)',
-      image: 'schlusel_uubyqi',
-    },
-    {
-      name: 'der Kugelschreiber (-)',
-      image: 'kugelschreiber_hpmrn3',
-    },
-    {
-      name: 'das Uhr (en)',
-      image: 'uhr_mkxnjp',
-    },
-    {
-      name: 'der Schirm (e)',
-      image: 'schirm_kamqsv',
-    },
-    {
-      name: 'die Tasche (n)',
-      image: 'tasche_utb0tv',
-    },
-    {
-      name: 'der Streichholz (-¨er)',
-      image: 'streichholz_bvg7y7',
-    },
-    {
-      name: 'die Seife (n)',
-      image: 'steife_wfub1c',
-    },
+  return (dispatch, getState) => {
+    const filters = getState().vocabulary.get('filters').toJS();
+    const result = words
+      .map((word, idx) => ({
+        ...word,
+        id: idx,
+        image: `http://res.cloudinary.com/inloove/image/upload/w_300,h_300,c_fit/${word.image}.jpg`,
+        mode: MODE_SHOWN,
+      }))
+      .filter(({ name }) => {
+        // TODO so much improvement here
+        const [art, , plural] = name.split(' ');
+        if (filters.plural && `(${filters.plural})` !== plural) {
+          return false;
+        }
+        if (filters.genre && filters.genre !== artikelToGenre[art]) {
+          return false;
+        }
+        return true;
+      });
+    dispatch({
+      type: LOAD,
+      words: result,
+    });
+  };
+}
 
-    {
-      name: 'der Schinken (-)',
-      image: 'schinken_bdavta',
-    },
-    {
-      name: 'der Apfel (-¨)',
-      image: 'apfel_paruch',
-    },
-    {
-      name: 'die Butter',
-      image: 'butter_pf8xac',
-    },
-    {
-      name: 'der Fisch (e)',
-      image: 'fisch_ksyagp',
-    },
-    {
-      name: 'der Kuchen (-)',
-      image: 'kuchen_p55nbx',
-    },
-    {
-      name: 'die Kartoffel (n)',
-      image: 'kartoffel_iqjgit',
-    },
-    {
-      name: 'der Braten (-)',
-      image: 'braten_ltg5v0',
-    },
-    {
-      name: 'der Käse (-)',
-      image: 'kese_eamkjt',
-    },
-    {
-      name: 'die Orange (n)',
-      image: 'orange_ukzpn7',
-    },
-    {
-      name: 'der Salat (e)',
-      image: 'salat_dq5s8j',
-    },
-    {
-      name: 'die Suppe (n)',
-      image: 'suppe_im0yqo',
-    },
-    {
-      name: 'die Milch',
-      image: 'milch_sc3avc',
-    },
-    {
-      name: 'die Schokolade (n)',
-      image: 'schokolade_frb5f3',
-    },
-    {
-      name: 'der Tee (s)',
-      image: 'tee_sm7gcp',
-    },
-    {
-      name: 'die Tomate (n)',
-      image: 'tomate_b1xxre',
-    },
-    {
-      name: 'das Brot (e)',
-      image: 'brot_k8yrul',
-    },
-
-    {
-      name: 'der Computer (-)',
-      image: 'computer_enot6c',
-    },
-    {
-      name: 'die SMS (-)',
-      image: 'sms_ndoxxq',
-    },
-    {
-      name: 'das Telefon (e)',
-      image: 'telefon_dkp5uw',
-    },
-    {
-      name: 'der Drucker (-)',
-      image: 'drucker_olfuue',
-    },
-    {
-      name: 'das Handy (s)',
-      image: 'handy_xdennl',
-    },
-    {
-      name: 'der Kalender (-)',
-      image: 'kalender_w33ycj',
-    },
-    {
-      name: 'das Formular (e)',
-      image: 'formulare_qafhtw',
-    },
-    {
-      name: 'der Laptop (s)',
-      image: 'laptop_ldzegi',
-    },
-    {
-      name: 'die E-mail (s)',
-      image: 'e-mail_pjxfzf',
-    },
-    {
-      name: 'das Notizbuch (-¨er)',
-      image: 'notizbuch_ooc6hq',
-    },
-    {
-      name: 'der Bildschirm (e)',
-      image: 'bildschirm_zamddx',
-    },
-    {
-      name: 'die Maus (-¨e)',
-      image: 'maus_fbcpeq',
-    },
-    {
-      name: 'die Briefmarke (n)',
-      image: 'briefmarke_xvaqeh',
-    },
-    {
-      name: 'die Rechnung (en)',
-      image: 'rechnung_bsyqtw',
-    },
-    {
-      name: 'der Stift (e)',
-      image: 'stift_aorxra',
-    },
-  ];
-  words = words.map((word, idx) => ({
-    ...word,
-    id: idx,
-    image: `http://res.cloudinary.com/inloove/image/upload/w_300,h_300,c_fit/${word.image}.jpg`,
-    mode: MODE_HIDDEN,
-  }));
-  return {
-    type: LOAD,
-    words,
+export function filter(label, value) {
+  return (dispatch) => {
+    dispatch({
+      type: FILTER,
+      label,
+      value,
+    });
+    dispatch(load());
   };
 }
