@@ -64,7 +64,7 @@ export function load() {
         ...word,
         id: idx,
         image: `http://res.cloudinary.com/inloove/image/upload/w_300,h_300,c_fit/${word.image}.jpg`,
-        mode: MODE_SHOWN,
+        mode: MODE_HIDDEN,
       }))
       .filter(({ name }) => {
         // TODO so much improvement here
