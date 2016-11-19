@@ -8,6 +8,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import store from './store';
 import App from './components/App';
 import Vocabulary from './components/Vocabulary';
+import Conversations from './components/Conversations';
 
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -17,6 +18,7 @@ render(
     <Router history={history}>
       <Route path="/" component={App}>
         <IndexRoute component={Vocabulary} />
+        <Route path="conversations" component={Conversations} />
       </Route>
     </Router>
   </Provider>,
