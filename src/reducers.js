@@ -1,7 +1,11 @@
 import vocabulary from './ducks/vocabulary';
-import conversations from './ducks/conversations';
+import conversation from './ducks/conversation';
+import conjugation from './ducks/conjugation';
+import verbs from './ducks/verbs';
 
 export default {
   vocabulary,
-  conversations,
+  conversation,
+  conjugation,
+  verbs,
 };

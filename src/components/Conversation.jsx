@@ -4,27 +4,14 @@ import shuffleArray from '../lib/shuffle';
 import {
   load as loadAction,
   checkSelection as checkSelectionAction,
-  WTYPE_LITERAL,
   WTYPE_REPLACE,
-} from '../ducks/conversations';
-import classNames from './Conversations.scss';
+} from '../ducks/conversation';
+import Message from './Conversation/Message';
+import classNames from './Conversation.scss';
 
-class Conversations extends Component {
+class Conversation extends Component {
   componentDidMount() {
     this.props.load();
-  }
-
-  displayMessage(message) {
-    return message.map((word) => {
-      switch (word.type) {
-        case WTYPE_REPLACE:
-          return (<strong>_____</strong>);
-        case WTYPE_LITERAL:
-          return (<span>{word.text}</span>);
-        default:
-          return '';
-      }
-    });
   }
 
   displayReplaceWords(message) {
@@ -48,8 +35,8 @@ class Conversations extends Component {
     return (
       <div className={classNames.container}>
         <div className={classNames.words}>
-          {messages && messages.map((message, idx) => (
-            <div key={idx}>{this.displayMessage(message)}</div>
+          {messages && messages.map(message => (
+            <Message message={message} />
           ))}
           {messages && messages.map((message, idx) => (
             <div key={idx}>{this.displayReplaceWords(message)}</div>
@@ -60,9 +47,9 @@ class Conversations extends Component {
   }
 }
 
-function mapStateToProps({ conversations }) {
+function mapStateToProps({ conversation }) {
   return {
-    messages: conversations.get('messages').toJS(),
+    messages: conversation.get('messages').toJS(),
   };
 }
 
@@ -73,4 +60,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Conversations);
+export default connect(mapStateToProps, mapDispatchToProps)(Conversation);

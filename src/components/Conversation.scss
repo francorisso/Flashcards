@@ -1,0 +1,14 @@
+.word {
+  margin: 0 5px 5px 0;
+  padding: 5px;
+  float: left;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #333;
+
+  &:hover {
+    background: #333;
+    color: #fff;
+  }
+}

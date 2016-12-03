@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
-import { conversations } from '../data/conversations';
+import conversations from '../data/conversations';
 
-const NAMESPACE = 'deutsch-lernen/conversations';
+const NAMESPACE = 'deutsch-lernen/conversation';
 
 export const LOAD = `${NAMESPACE}/load`;
 export const WTYPE_LITERAL = `${NAMESPACE}/wtype_literal`;
@@ -38,6 +38,8 @@ export default function reducer(state = initState, action) {
 
 export function load() {
   // TODO: improve efficiency
+  // TODO: here I should ask to an API for specific conversation based on some parameter
+  // like category (small talk, w-fragen, verbs)
   return (dispatch) => {
     const conversation = conversations[Math.floor(Math.random() * conversations.length)];
     const messages = [];
@@ -84,7 +86,7 @@ export function checkSelection(selectedWord) {
       type: CHECK_SELECTION,
       selectedWord,
     });
-    const messages = getState().conversations.get('messages').toJS();
+    const messages = getState().conversation.get('messages').toJS();
     for (const message of messages) {
       for (const word of message) {
         if (word.type === WTYPE_REPLACE) {
