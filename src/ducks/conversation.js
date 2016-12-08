@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import conversations from '../data/conversations';
+import conjugate from '../lib/verbconjugation';
 
 const NAMESPACE = 'deutsch-lernen/conversation';
 
@@ -36,6 +37,16 @@ export default function reducer(state = initState, action) {
   }
 }
 
+function isVerb(word) {
+  const [, definer] = word.split('::');
+  return definer && definer.toLowerCase() === 'verb';
+}
+
+function conjugateVerb(verbStructure) {
+  const [verb, , person] = verbStructure.split('::');
+  return conjugate(verb, person);
+}
+
 export function load() {
   // TODO: improve efficiency
   // TODO: here I should ask to an API for specific conversation based on some parameter
@@ -64,9 +75,13 @@ export function load() {
               text: message.slice(0, idx),
             });
           }
+          let literal = message.slice(idx + 1, closingIdx);
+          if (isVerb(literal)) {
+            literal = conjugateVerb(literal);
+          }
           result.push({
             type: WTYPE_REPLACE,
-            text: message.slice(idx + 1, closingIdx),
+            text: literal,
           });
           message = message.slice(closingIdx + 1);
         }

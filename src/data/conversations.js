@@ -1,10 +1,6 @@
 const conversations = [
   [
-    '<Wie> <get>\'s?',
-    '<Sehr> <gut>, <danke>',
-  ],
-  [
-    '<Wie> <bist> <du> von Beruf?',
+    '<Wie> <sein::verb::3> <er> von Beruf?',
     '<Ich> <bin> Programmierer.',
   ],
 ];

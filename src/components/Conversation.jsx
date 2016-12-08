@@ -17,11 +17,15 @@ class Conversation extends Component {
   displayReplaceWords(message) {
     const { checkSelection } = this.props;
     const words = shuffleArray(message);
-    return words.map((word) => {
+    return words.map((word, idx) => {
       switch (word.type) {
         case WTYPE_REPLACE:
           return (
-            <span className={classNames.word} onClick={() => checkSelection(word)}>
+            <span
+              key={idx}
+              className={classNames.word}
+              onClick={() => checkSelection(word)}
+            >
               {word.text}
             </span>);
         default:
@@ -35,8 +39,8 @@ class Conversation extends Component {
     return (
       <div className={classNames.container}>
         <div className={classNames.words}>
-          {messages && messages.map(message => (
-            <Message message={message} />
+          {messages && messages.map((message, idx) => (
+            <Message message={message} key={idx} />
           ))}
           {messages && messages.map((message, idx) => (
             <div key={idx}>{this.displayReplaceWords(message)}</div>

@@ -12,6 +12,6 @@ export const verbs = [
 ];
 
 export const superIrrVerbs = {
-  sein: ['bin', 'bist', 'ist', 'sind', 'seid', 'sind'],
-  essen : ['esse', 'isst', 'isst', 'essen', 'esst', 'essen'],
+  sein: [0, 'bin', 'bist', 'ist', 'sind', 'seid', 'sind'],
+  essen: [0, 'esse', 'isst', 'isst', 'essen', 'esst', 'essen'],
 };

@@ -11,6 +11,7 @@ import Vocabulary from './components/Vocabulary';
 import Conversation from './components/Conversation';
 import Conjugation from './components/Conjugation';
 import Verbs from './components/Verbs';
+import Complete from './components/Complete';
 
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -23,6 +24,7 @@ render(
         <Route path="conversation" component={Conversation} />
         <Route path="verbs" component={Verbs} />
         <Route path="verb/:verb" component={Conjugation} />
+        <Route path="complete" component={Complete} />
       </Route>
     </Router>
   </Provider>,
