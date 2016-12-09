@@ -1,55 +1,76 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form';
+import classnames from 'classnames';
+import Styles from './Complete.scss';
 import {
   load as loadAction,
   check as checkAction,
   WTYPE_VERB,
-  WTYPE_SUBJECT,
 } from '../ducks/complete';
 
-class Complete extends Component {
-  constructor() {
-    super();
-    this.onBlur = this.onBlur.bind(this);
-  }
+const TextField = ({ input, label, meta: { touched, error } }) => (
+  <span>
+    <input {...input} className={classnames({ [Styles.invalid]: touched && error })} /> ({label})
+  </span>
+);
 
+class Complete extends Component {
   componentDidMount() {
     this.props.load();
   }
 
-  onBlur(e) {
-    const { check } = this.props;
-    const value = e.target.value;
-    check(value);
+  componentWillUpdate(nextProps) {
+    const { submitSucceeded } = nextProps;
+    if (submitSucceeded) {
+      setTimeout(() => {
+        this.props.reset();
+        this.props.load();
+      }, 3000);
+    }
   }
 
   render() {
-    const { items } = this.props;
+    const {
+      items,
+      handleSubmit,
+      pristine,
+      submitting,
+      submitFailed,
+      submitSucceeded,
+    } = this.props;
     return (
-      <div>
-        {items && items.map((item, idx) => {
-          switch (item.type) {
-            case WTYPE_VERB:
-              return (
-                <span key={idx}>
-                  <input
-                    type="text"
-                    onBlur={this.onBlur}
-                    placeholder={item.value}
+      <form onSubmit={handleSubmit(checkAction)}>
+        {submitFailed && <div className="alert alert-danger">Wrong!!!</div>}
+        {submitSucceeded && <div className="alert alert-success">You're awesome! Loading other...</div>}
+        <div className="form-group">
+          {items && items.map((item, idx) => {
+            switch (item.type) {
+              case WTYPE_VERB:
+                return (
+                  <Field
+                    name={item.id}
+                    component={TextField}
+                    key={item.id}
+                    label={item.verb}
                   />
-                  ( {item.verb} )
-                </span>
-              );
-            default:
-              return (<span key={idx}>
-                {idx === 0 ?
-                  `${item.value[0].toUpperCase()}${item.value.slice(1)}` :
-                  item.value
-                }
-              </span>);
-          }
-        })}
-      </div>
+                );
+              default:
+                return (<span key={idx}>
+                  {idx === 0 ?
+                    `${item.value[0].toUpperCase()}${item.value.slice(1)}` :
+                    item.value
+                  }
+                </span>);
+            }
+          })}
+        </div>
+        <div className="form-group">
+          <button className="btn" type="submit" disabled={pristine || submitting || submitSucceeded}>
+            Richtig?
+          </button>
+        </div>
+      </form>
     );
   }
 }
@@ -63,8 +84,12 @@ function mapStateToProps({ complete }) {
 function mapDispatchToProps(dispatch) {
   return {
     load: () => dispatch(loadAction()),
-    check: word => dispatch(checkAction(word)),
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Complete);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({
+    form: 'complete',
+    enableReinitialize: false,
+  })(Complete)
+);

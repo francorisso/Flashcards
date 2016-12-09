@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import { SubmissionError } from 'redux-form';
 import completeSentences from '../data/complete-conjugation';
 import conjugate, { getSubjectName } from '../lib/verbconjugation';
 
@@ -9,6 +10,8 @@ export const WTYPE_LITERAL = `${NAMESPACE}/wtype_literal`;
 export const WTYPE_VERB = `${NAMESPACE}/wtype_verb`;
 export const WTYPE_SUBJECT = `${NAMESPACE}/wtype_subject`;
 export const CHECK = `${NAMESPACE}/check`;
+export const CHECK_WRONG = `${NAMESPACE}/check_wrong`;
+export const CHECK_RIGHT = `${NAMESPACE}/check_right`;
 
 const initState = Immutable.Map({
   items: Immutable.List([]),
@@ -17,6 +20,9 @@ export default function reducer(state = initState, action) {
   switch (action.type) {
     case LOAD:
       return state.set('items', Immutable.List(action.items));
+    case CHECK:
+      // TODO add if its correct or wrong
+      return state;
     default:
       return state;
   }
@@ -32,11 +38,12 @@ function isSubject(word) {
   return definer && definer.toLowerCase() === 'subject';
 }
 
-function createVerbItem(word) {
+function createVerbItem(word, id) {
   const [, verb] = word.split('::');
   if (verb) {
     return {
       type: WTYPE_VERB,
+      id,
       verb,
       value: null,
     };
@@ -88,7 +95,7 @@ export function load() {
         const specialWord = sentence.slice(idx + 1, closingIdx);
         let item = null;
         if (isVerb(specialWord)) {
-          item = createVerbItem(specialWord);
+          item = createVerbItem(specialWord, `verb_${idx}`);
           for (let it = items.length - 1; it >= 0; it--) {
             const itemAux = items[it];
             if (itemAux.type === WTYPE_SUBJECT) {
@@ -115,4 +122,21 @@ export function load() {
       items,
     });
   };
+}
+
+export function check(fields, dispatch, props) {
+  return new Promise((resolve) => {
+    const items = props.items;
+    for (const item of items) {
+      if (item.type === WTYPE_VERB) {
+        if (fields[item.id].toLowerCase() !== item.value.toLowerCase()) {
+          dispatch({
+            type: CHECK_WRONG,
+          });
+          throw new SubmissionError({ [item.id]: 'incorrect field', _error: 'Fail' });
+        }
+      }
+    }
+    resolve();
+  });
 }
