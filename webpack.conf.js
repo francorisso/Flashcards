@@ -35,11 +35,19 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('bundle.css', { allChunks: true }),
+    new Webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      },
+    }),
     new Webpack.optimize.DedupePlugin(),
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
       },
+      outputs: {
+        comments: false,
+      }
     }),
   ],
   resolve: {

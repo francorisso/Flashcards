@@ -4,7 +4,7 @@
   "description": "",
   "main": "bundle.js",
   "scripts": {
-    "build": "webpack --define process.env.NODE_ENV='\"production\"' --config webpack.conf.js -p",
+    "build": "webpack --config webpack.conf.js",
     "create:folders": "cd src/;mkdir components;mkdir ducks;echo 'Folders Created.'",
     "open:src": "babel-node ./tools/server.js",
     "start": "npm run open:src",
@@ -14,6 +14,7 @@
   "author": "Franco Risso",
   "license": "ISC",
   "dependencies": {
+    "babel-preset-es2015": "^6.18.0",
     "classnames": "^2.2.5",
     "extract-text-webpack-plugin": "^1.0.1",
     "immutable": "^3.8.1",
