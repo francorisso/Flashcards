@@ -35,15 +35,18 @@ function mapStateToProps({ vocabulary }) {
   return {
     words: vocabulary.get('words'),
     filters: vocabulary.get('filters').toJS(),
+    touches: vocabulary.get('touches'),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const { load, switchItemState, filter } = vocabularyActions;
+  const { load, switchItemState, touchSum, touchReset, filter } = vocabularyActions;
   return {
     load: () => dispatch(load()),
     switchItemState: itemId => dispatch(switchItemState(itemId)),
     filter: (label, value) => dispatch(filter(label, value)),
+    touchSum: (value) => dispatch(touchSum(value)),
+    touchReset: () => dispatch(touchReset()),
   };
 }
 

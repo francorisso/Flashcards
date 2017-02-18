@@ -5,6 +5,8 @@ const NAMESPACE = 'deutsch-flashcards/vocabulary';
 
 export const MODE_HIDDEN = `${NAMESPACE}/mode_hidden`;
 export const MODE_SHOWN = `${NAMESPACE}/mode_shown`;
+export const TOUCHES_SUM = `${NAMESPACE}/TOUCHES_SUM`;
+export const TOUCHES_RESET = `${NAMESPACE}/TOUCHES_RESET`;
 
 export const LOAD = `${NAMESPACE}/load`;
 export const SWITCH_MODE = `${NAMESPACE}/switch_mode`;
@@ -14,9 +16,14 @@ export const FILTER = `${NAMESPACE}/filter`;
 const initState = Immutable.Map({
   words: Immutable.List([]),
   filters: Immutable.Map({}),
+  touches: 0,
 });
 export default function reducer(state = initState, action) {
   switch (action.type) {
+    case TOUCHES_SUM:
+      return state.set('touches', state.get('touches') + action.value);
+    case TOUCHES_RESET:
+      return state.set('touches', 0);
     case LOAD:
       return state.set('words', Immutable.List(action.words));
     case FILTER: {
@@ -92,5 +99,18 @@ export function filter(label, value) {
       value,
     });
     dispatch(load());
+  };
+}
+
+export function touchSum(value) {
+  return {
+    type: TOUCHES_SUM,
+    value,
+  };
+}
+
+export function touchReset() {
+  return {
+    type: TOUCHES_RESET,
   };
 }

@@ -18,6 +18,7 @@ const TextField = ({ input, label, meta: { touched, error } }) => (
 class Complete extends Component {
   componentDidMount() {
     this.props.load();
+    this.setState({ lala: 'lala' });
   }
 
   componentWillUpdate(nextProps) {

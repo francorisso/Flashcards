@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { MODE_SHOWN } from '../ducks/vocabulary';
-import classNames from './Flashcard.scss';
 
 function calculateDistance({ x1, y1, x2, y2 }) {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -13,13 +11,47 @@ function midpoint({ x1, y1, x2, y2 }) {
   };
 }
 
-class Flashcard extends Component {
+
+const touchManager = (() => {
+  const gestures = [
+    {
+      name: 'tap',
+      onTouchMove: ({ state, touch1, touch2 }) => {
+        if (
+          touch2.timestamp - touch1.timestamp > 500 &&
+          touch2.touches.length === 1
+        ) {
+          console.log('tap');
+        }
+        return state;
+      }
+    }
+  ];
+
+  let touch1 = null;
+  let touch2 = null;
+
+  return {
+    add(event, timestamp) {
+      [touch1, touch2] = [touch2, { event, timestamp }];
+    },
+
+    onTouchMove(state) {
+      let stateMutated = state;
+      for (const gesture in gestures) {
+        stateMutated = gesture.onTouchMove({ state: stateMutated, touch1, touch2 });
+      }
+      return stateMutated;
+    },
+  };
+})();
+
+class ImageZoom extends Component {
   constructor(props) {
     super(props);
     this.state = {
       distance: 0,
       zoom: 1,
-      scrolling: false,
       left: 0,
       top: 0,
     };
@@ -126,36 +158,22 @@ class Flashcard extends Component {
   }
 
   render () {
-    const { name, image, mode, onClick } = this.props;
-    const { zoom } = this.state;
-    const [artikel, word, plural] = name.split(' ');
+    const { image} = this.props;
+    const { left, top, zoom } = this.state;
     return (
       <div
-        className={`thumbnail ${classNames.container}`}
-        onClick={onClick}
-        onTouchStart={(e) => this.onTouchStart(e)}
-        onTouchMove={(e) => this.onTouchMove(e)}
-        onTouchEnd={(e) => this.onTouchEnd(e)}
-      >
-        <div className={classNames.img_container} style={{
+        style={{
           backgroundImage: `url(${image})`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: `${zoom * 100}%`,
-          backgroundPosition: `${this.state.left}px ${this.state.top}px`,
-        }}></div>
-        <div className="caption">
-          {mode === MODE_SHOWN && (
-            <h3 className={`${classNames[artikel.toLowerCase()]} text-center`}>
-              {artikel} {word} {plural}
-            </h3>
-          )}
-          <p className={classNames.touch}>
-            <i className="fa fa-hand-pointer-o" /> Touch to {mode === MODE_SHOWN ? 'hide' : 'show'}
-          </p>
-        </div>
-      </div>
+          backgroundPosition: `${left}px ${top}px`,
+        }}
+        onTouchStart={e => this.onTouchStart(e)}
+        onTouchMove={e => this.onTouchMove(e)}
+        onTouchEnd={e => this.onTouchEnd(e)}
+      />
     );
   }
 }
 
-export default Flashcard;
+export default ImageZoom;
