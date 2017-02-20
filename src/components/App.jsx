@@ -12,7 +12,7 @@ function onTouchEnd(e) {
 }
 
 function onTouchMove(e) {
-  if (e.touches.length>1) {
+  if (e.touches.length > 1) {
     e.preventDefault();
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();

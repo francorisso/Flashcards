@@ -1,48 +1,59 @@
 import React, { Component } from 'react';
-
-function calculateDistance({ x1, y1, x2, y2 }) {
-  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
-
-function midpoint({ x1, y1, x2, y2 }) {
-  return {
-    x: (x1 + x2) / 2,
-    y: (y1 + y2) / 2,
-  };
-}
-
+import { onDoubleTap, onMove, onPinch } from './gestures';
 
 const touchManager = (() => {
   const gestures = [
-    {
-      name: 'tap',
-      onTouchMove: ({ state, touch1, touch2 }) => {
-        if (
-          touch2.timestamp - touch1.timestamp > 500 &&
-          touch2.touches.length === 1
-        ) {
-          console.log('tap');
-        }
-        return state;
-      }
-    }
+    onPinch,
+    onMove,
+    onDoubleTap,
   ];
-
   let touch1 = null;
   let touch2 = null;
+  let lastEvent = null;
+
+  const onGesture = (gestureName, state) => {
+    let stateMutated = state;
+    for (const gesture of gestures) {
+      if (gestureName in gesture && typeof gesture[gestureName] === 'function') {
+        stateMutated = gesture[gestureName]({ state: stateMutated, touch1, touch2, lastEvent });
+      }
+    }
+    return stateMutated;
+  };
 
   return {
-    add(event, timestamp) {
-      [touch1, touch2] = [touch2, { event, timestamp }];
+    add(event) {
+      lastEvent = event;
+      touch1 = touch2 && { ...touch2 };
+      const touches = [];
+      if (event.targetTouches) {
+        for (let touchIdx = 0; touchIdx < event.targetTouches.length; touchIdx++) {
+          touches.push({
+            x: event.targetTouches[touchIdx].screenX,
+            y: event.targetTouches[touchIdx].screenY,
+          });
+        }
+      } else {
+        touches.push({
+          x: event.screenX,
+          y: event.screenY,
+        });
+      }
+
+      touch2 = {
+        target: event.target,
+        touches,
+        timestamp: Date.now(),
+      };
     },
 
-    onTouchMove(state) {
-      let stateMutated = state;
-      for (const gesture in gestures) {
-        stateMutated = gesture.onTouchMove({ state: stateMutated, touch1, touch2 });
-      }
-      return stateMutated;
-    },
+    onClick(state) { return onGesture('onClick', state); },
+
+    onTouchStart(state) { return onGesture('onTouchStart', state); },
+
+    onTouchMove(state) { return onGesture('onTouchMove', state); },
+
+    onTouchEnd(state) { return onGesture('onTouchEnd', state); },
   };
 })();
 
@@ -54,111 +65,47 @@ class ImageZoom extends Component {
       zoom: 1,
       left: 0,
       top: 0,
+      transition: false,
+      transitionFn: null,
+      gesture: null,
     };
   }
 
-  onTouchStart(e) {
-    const { top, left } = e.target.getBoundingClientRect();
-    const xOffset = -this.state.left + e.targetTouches[0].screenX - left;
-    const yOffset = -this.state.top + e.targetTouches[0].screenY - top;
-    this.setState({
-      distance: 0,
-      xOffset,
-      yOffset
-    });
-
-    if (e.touches.length > 1) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.nativeEvent.stopImmediatePropagation();
+  componentDidUpdate() {
+    if (this.state.transition) {
+      setTimeout(() => {
+        if (typeof this.state.transitionFn === 'function') {
+          this.setState(this.state.transitionFn(this.state));
+        }
+      }, 50);
     }
   }
 
-  onTouchEnd(e) {
-    this.setState({
-      scrolling: false,
-    });
+  onClick(e) {
+    touchManager.add(e);
+    const state = touchManager.onClick(this.state);
+    this.setState(state);
+  }
+
+  onTouchStart(e) {
+    touchManager.add(e);
+    const state = touchManager.onTouchStart(this.state);
+    this.setState(state);
   }
 
   onTouchMove(e) {
-    if (e.touches.length===1 && this.state.zoom===1) {
-      console.log('swipe');
-      return;
-    }
-    if (e.touches.length===1 && this.state.zoom!==1) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.nativeEvent.stopImmediatePropagation();
-      const { top, left } = e.target.getBoundingClientRect();
-      const xOffset = e.targetTouches[0].screenX - left;
-      const yOffset = e.targetTouches[0].screenY - top;
-      this.setState({
-        left: Math.min(0, (this.state.xOffset - xOffset) * -1),
-        top: Math.min(0, (this.state.yOffset - yOffset) * -1)
-      });
-      return;
-    }
-    if (e.touches.length<2 || e.targetTouches.length<2) {
-      return;
-    }
-
-    e.preventDefault();
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    const distance = this.state.distance;
-    const newDistance = calculateDistance({
-      x1: e.targetTouches[0].screenX,
-      y1: e.targetTouches[0].screenY,
-      x2: e.targetTouches[1].screenX,
-      y2: e.targetTouches[1].screenY,
-    });
-
-    if (!distance) {
-      this.setState({
-        distance: newDistance,
-      });
-      return;
-    }
-
-    const { zoom } = this.state;
-    let newZoom  = 0;
-    if (distance < newDistance) {
-      newZoom = Math.min(3, zoom + (newDistance / distance) / 10);
-      this.setState({
-        zoom: newZoom,
-        distance: newDistance,
-      });
-    }
-    else {
-      newZoom = Math.max(1, zoom - (newDistance / distance) / 10);
-      this.setState({
-        zoom: newZoom,
-        distance: newDistance,
-      });
-    }
-
-    const [ canvasWidth, canvasHeight ] = [ 300, 300 ];
-    const { top, left } = e.target.getBoundingClientRect();
-    const midPoint = midpoint({
-      x1: e.targetTouches[0].screenX,
-      y1: e.targetTouches[0].screenY,
-      x2: e.targetTouches[1].screenX,
-      y2: e.targetTouches[1].screenY,
-    });
-    const [xOffset, yOffset] = [midPoint.x - left, midPoint.y - top];
-    const [xOffsetPerc, yOffsetPerc] = [(xOffset / canvasWidth), (yOffset / canvasHeight)];
-    const [ newLeft, newTop ] = [
-      -xOffsetPerc * (canvasWidth * newZoom) + xOffset,
-      -yOffsetPerc * (canvasHeight * newZoom) + yOffset
-    ];
-    this.setState({
-      left: newLeft,
-      top: newTop
-    });
+    touchManager.add(e);
+    const state = touchManager.onTouchMove(this.state);
+    this.setState(state);
   }
 
-  render () {
-    const { image} = this.props;
+  onTouchEnd() {
+    const state = touchManager.onTouchEnd(this.state);
+    this.setState(state);
+  }
+
+  render() {
+    const { image, className } = this.props;
     const { left, top, zoom } = this.state;
     return (
       <div
@@ -168,9 +115,11 @@ class ImageZoom extends Component {
           backgroundSize: `${zoom * 100}%`,
           backgroundPosition: `${left}px ${top}px`,
         }}
+        onClick={e => this.onClick(e)}
         onTouchStart={e => this.onTouchStart(e)}
         onTouchMove={e => this.onTouchMove(e)}
         onTouchEnd={e => this.onTouchEnd(e)}
+        className={className}
       />
     );
   }
