@@ -20,7 +20,7 @@ function midpoint({ x1, y1, x2, y2 }) {
   };
 }
 
-function transitionMovement({ state, x1, y1, x2, y2, leftTo, topTo, leftStep, topStep }) {
+function transitionMovement({ state, leftTo, topTo, leftStep, topStep }) {
   if (
     (leftStep > 0 && state.left < leftTo) ||
     (topStep > 0 && state.top < topTo) ||
@@ -180,19 +180,26 @@ export const onMove = {
     if (touches1.length !== 1 || touches2.length !== 1 || distance < 20) {
       return state;
     }
-
+    let leftMovement = (touches2[0].x - touches1[0].x);
+    let topMovement = (touches2[0].y - touches1[0].y);
+    while (Math.abs(leftMovement) > 20 || Math.abs(topMovement) > 20) {
+      leftMovement /= 2;
+      topMovement /= 2;
+    }
+    let leftStep = leftMovement;
+    let topStep = topMovement;
+    while (Math.abs(leftStep) > 5 || Math.abs(topStep) > 5) {
+      leftStep /= 2;
+      topStep /= 2;
+    }
     return {
       ...state,
       transitionFn: (currState) => transitionMovement({
         state: currState,
-        x1: touches2[0].x,
-        y1: touches2[0].y,
-        x2: touches1[0].x,
-        y2: touches1[0].y,
-        leftTo: touches2[0].x > touches1[0].x ? left + 15 : left - 15,
-        topTo: touches2[0].y > touches1[0].y ? top + 15 : top - 15,
-        leftStep: touches2[0].x > touches1[0].x ? 2 : -2,
-        topStep: touches2[0].y > touches1[0].y ? 2 : -2,
+        leftTo: left + leftMovement,
+        topTo: top + topMovement,
+        leftStep: leftStep,
+        topStep: topStep,
       }),
       transition: true,
     };
